@@ -36,9 +36,12 @@ public class ProducerThread implements Runnable{
                         row[8], row[9], row[10], row[11], row[12], row[13]);
 
 
-                if (!(priorityBlockingQueue.offer(a, 1, TimeUnit.MICROSECONDS))) {
-                    priorityBlockingQueue.put(a);
+                while (!(priorityBlockingQueue.offer(a, 1, TimeUnit.MICROSECONDS))) {
                     intProducerTimeout++;
+                    if (priorityBlockingQueue.offer(a, 10000, TimeUnit.MILLISECONDS)){
+                        System.out.println("Ошибка чтения");
+                        break;
+                    }
                 }
                 added++;
             }
